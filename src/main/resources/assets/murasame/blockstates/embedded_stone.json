@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "murasame:block/embedded_stone"
+    }
+  }
+}

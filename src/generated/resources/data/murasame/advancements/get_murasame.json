@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "obtained_from_stone": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.murasame.get_murasame.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "slashblade:slashblade"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.murasame.get_murasame.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtained_from_stone"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
