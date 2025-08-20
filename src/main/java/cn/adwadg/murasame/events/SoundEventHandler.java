@@ -2,7 +2,9 @@ package cn.adwadg.murasame.events;
 
 import cn.adwadg.murasame.Murasame;
 import cn.adwadg.murasame.Registry.SoundRegistry;
+import cn.adwadg.murasame.client.utils.MurasameEvolutionTracker;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -10,6 +12,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -61,6 +64,22 @@ public class SoundEventHandler {
                     SoundRegistry.MURASAME_MORNING.get() :
                     SoundRegistry.MURASAME_MORNING2.get();
             Murasame.playSound(player, sound);
+        }
+        if (!event.updateLevel()) {
+            //player.sendSystemMessage(Component.translatable("message.murasame.sleepwithblade"));
+            checkHands(player);
+        }
+    }
+
+    private static void checkHands(Player player) {
+        checkHand(player, InteractionHand.MAIN_HAND);
+        checkHand(player, InteractionHand.OFF_HAND);
+    }
+
+    private static void checkHand(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (MurasameEvolutionTracker.isValidBlade(stack)) {
+            MurasameEvolutionTracker.checkEvolution(player, stack);
         }
     }
 

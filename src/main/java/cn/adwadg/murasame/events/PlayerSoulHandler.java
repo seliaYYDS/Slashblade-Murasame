@@ -97,15 +97,17 @@ public class PlayerSoulHandler {
     public static void removeSoul(Player player) {
         EntityMurasameSoul soul = soulMap.remove(player.getUUID());
         if (soul != null && soul.isAlive()) {
+            Murasame.LOGGER.debug("removed player soul: {}",player.getId());
             soul.discard();
         }
     }
     @SubscribeEvent
-    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         Player player = event.getEntity();
         removeSoul(player);
     }
-    @SubscribeEvent void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
         Player player = event.getEntity();
         removeSoul(player);
     }
@@ -117,34 +119,8 @@ public class PlayerSoulHandler {
         }
     }*/
 
-    @SubscribeEvent
-    public void onPlayerWakeUp(PlayerWakeUpEvent event) {
-        Player player = event.getEntity();
-        Level level = player.level();
-        if(!level.isClientSide){
-            ServerPlayer player1 = (ServerPlayer) player;
-            if (event.updateLevel()) {
-                long dayTime = level.getDayTime() % 24000; // 获取一天内的时间（0-24000）
-                if (dayTime > 0 && dayTime < 1000) { // 时间在 0 到 1000 ticks 之间（清晨）
-                    player.sendSystemMessage(Component.translatable("message.murasame.sleepwithblade"));
-                    checkHands(player1);
-                }
-            }
-        }
 
-    }
 
-    private static void checkHands(ServerPlayer player) {
-        checkHand(player, InteractionHand.MAIN_HAND);
-        checkHand(player, InteractionHand.OFF_HAND);
-    }
-
-    private static void checkHand(ServerPlayer player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (MurasameEvolutionTracker.isValidBlade(stack)) {
-            MurasameEvolutionTracker.checkEvolution(player, stack);
-        }
-    }
 
 
     @SubscribeEvent

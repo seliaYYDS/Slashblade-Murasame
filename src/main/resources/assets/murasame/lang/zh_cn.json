@@ -8,10 +8,11 @@
   "message.murasame.need_more_undead_kills": "丛雨丸拒绝了你，你需要证明你除秽的能力",
   "message.murasame.need_more_buffs": "丛雨丸拒绝了你，你需要更多力量",
   "message.murasame.evolved": "§6§k111§a丛雨丸觉醒了刀魂§6§k111",
-  "message.murasame.sleepwithblade": "你与丛雨丸度过了一个夜晚",
 
   "advancements.murasame.get_murasame.title": "§6传说之刃",
   "advancements.murasame.get_murasame.description": "从石头中拔出丛雨丸",
 
-  "entity.murasame.soul": "丛雨"
+  "entity.murasame.soul": "丛雨",
+
+  "itemGroup.murasame_tab": "丛雨"
 }

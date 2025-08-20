@@ -8,14 +8,23 @@ import cn.adwadg.murasame.client.renderer.MurasameSoulRenderer;
 import cn.adwadg.murasame.data.ModAdvancementProvider;
 import cn.adwadg.murasame.data.ModWorldGenProvider;
 import com.mojang.logging.LogUtils;
+import mods.flammpfeil.slashblade.SlashBladeCreativeGroup;
+import mods.flammpfeil.slashblade.client.renderer.model.BladeModelManager;
+import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -24,44 +33,77 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Mod(Murasame.MOD_ID)
 public class Murasame {
     public static final String MOD_ID = "murasame";
     public static final Logger LOGGER = LogUtils.getLogger();
-
+    // 添加创造模式标签栏注册器
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
+    // 注册Murasame创造模式标签栏
+    public static final RegistryObject<CreativeModeTab> MURASAME_TAB = CREATIVE_MODE_TABS.register("murasame_tab",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.murasame_tab"))
+                    .withTabsBefore(SlashBladeCreativeGroup.SLASHBLADE_GROUP.getId())
+                    .icon(() -> {
+                        ItemStack stack = new ItemStack(mods.flammpfeil.slashblade.init.SBItems.slashblade);
+                        stack.getCapability(ItemSlashBlade.BLADESTATE).ifPresent(s -> {
+                            s.setModel(new ResourceLocation(MOD_ID, "models/murasame/murasamemaru_awakened.obj"));
+                            s.setTexture(new ResourceLocation(MOD_ID, "models/murasame/murasamemaru_awakened.png"));
+                        });
+                        return stack;
+                    })
+                    .displayItems((parameters, output) -> {
+                        fillBlades(output);
+                        // 添加其他模组物品到创造标签栏
+                        output.accept(ModBlocks.EMBEDDED_STONE_ITEM.get());
+                        output.accept(ModBlocks.EMPTY_STONE_ITEM.get());
+                        // 可以继续添加其他物品
+                    })
+                    .build());
+    private static void fillBlades(CreativeModeTab.Output output) {
+        if (Minecraft.getInstance().getConnection() != null) {
+            BladeModelManager.getClientSlashBladeRegistry()
+                    .entrySet().stream()
+                    // 过滤空值
+                    .filter(entry -> entry.getKey() != null && entry.getValue() != null)
+                    // 解析字符串为ResourceLocation并过滤命名空间
+                    .filter(entry -> {
+                        ResourceLocation loc = ResourceLocation.tryParse(entry.getKey().location().toString());
+                        return loc != null && loc.getNamespace().equals(MOD_ID);
+                    })
+                    // 按字符串键排序
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(entry -> {
+                        LOGGER.info("Registering Murasame Slashblade: {}", entry.getKey());
+                        output.accept(entry.getValue().getBlade());
+                    });
+        }
+    }
     public Murasame() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-
-
-
+        // 注册创造模式标签栏
+        CREATIVE_MODE_TABS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
         SoundRegistry.register(modEventBus);
         //SERegistry.register(modEventBus);
-
         ModBlocks.BLOCKS.register(modEventBus);  // 先注册方块
         ModEntities.ENTITIES.register(modEventBus);
         ModBlocks.ITEMS.register(modEventBus);   // 然后注册方块物品
         ModEntities.BLOCK_ENTITIES.register(modEventBus); // 接着注册方块实体
         ModItems.ITEMS.register(modEventBus);    // 最后注册其他物品
-
-
         ModEntities.registerAttributes(FMLJavaModLoadingContext.get().getModEventBus());
-
         modEventBus.addListener(ModModelProvider::registerLayers);
-
-
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::onGatherData);
         modEventBus.addListener(this::onCommonSetup);
-
-
-
-
     }
 
     /*private void registerAfterModsLoaded(FMLCommonSetupEvent event) {

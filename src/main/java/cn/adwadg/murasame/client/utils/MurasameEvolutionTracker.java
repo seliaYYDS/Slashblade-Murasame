@@ -9,6 +9,7 @@ import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,7 @@ public class MurasameEvolutionTracker {
     public static final int REQUIRED_KILLS = 1000;
     public static final int REQUIRED_SOULS = 50000; // 新条件：Proud Soul数量
 
-    public static void checkEvolution(ServerPlayer player, ItemStack stack) {
+    public static void checkEvolution(Player player, ItemStack stack) {
         if (!isValidBlade(stack)) return;
 
         stack.getCapability(ItemSlashBlade.BLADESTATE).ifPresent(state -> {
@@ -37,7 +38,7 @@ public class MurasameEvolutionTracker {
         });
     }
 
-    private static void evolveBlade(ServerPlayer player, ItemStack stack, ISlashBladeState state) {
+    private static void evolveBlade(Player player, ItemStack stack, ISlashBladeState state) {
         // 更新模型和属性
         state.setModel(new ResourceLocation("murasame", "models/murasame/murasamemaru_awakened.obj"));
         state.setTexture(new ResourceLocation("murasame", "models/murasame/murasamemaru_awakened.png"));

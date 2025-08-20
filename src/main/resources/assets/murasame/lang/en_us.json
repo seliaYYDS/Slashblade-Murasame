@@ -5,15 +5,14 @@
   "block.murasame.empty_stone": "Empty Embedded Stone",
 
   "message.murasame.need_level": "You need at least level 50 to take this blade",
-  "message.murasame.shrine_not_found": "The sacred shrine is nowhere to be found",
-  "message.murasame.need_more_undead_kills": "You need at least 100 kills",
-  "message.murasame.need_more_buffs": "You need at least 2 kinds of positive effects",
+  "message.murasame.need_more_undead_kills": "You need at least 500 kills",
+  "message.murasame.need_more_buffs": "You need at least 5 kinds of positive effects",
   "message.murasame.evolved": "§6§k111§aMurasamemaru has awakened§6§k111",
-  "message.murasame.sleepwithblade": "You had a good night with murasamemaru",
 
   "advancements.murasame.get_murasame.title": "§6The Legendary Blade",
   "advancements.murasame.get_murasame.description": "Obtain the Murasamemaru from the sacred shrine",
 
+  "entity.murasame.soul": "Murasame",
 
-  "entity.murasame.soul": "Murasame"
+  "itemGroup.murasame_tab": "Murasame"
 }
