@@ -36,6 +36,11 @@ public class SoundRegistry {
     public static final RegistryObject<SoundEvent> MURASAME_SWITCH2 = register("murasame_switch2");
     public static final RegistryObject<SoundEvent> MURASAME_SWITCH3 = register("murasame_switch3");
     public static final RegistryObject<SoundEvent> MURASAME_SWITCH4 = register("murasame_switch4");
+    public static final RegistryObject<SoundEvent> MURASAME_SWITCH5 = register("murasame_switch5");
+    public static final RegistryObject<SoundEvent> MURASAME_SWITCH6 = register("murasame_switch6");
+    public static final RegistryObject<SoundEvent> MURASAME_SWITCH7 = register("murasame_switch7");
+    public static final RegistryObject<SoundEvent> MURASAME_SWITCH8 = register("murasame_switch8");
+    public static final RegistryObject<SoundEvent> MURASAME_SWITCH9 = register("murasame_switch9");
 
     private static RegistryObject<SoundEvent> register(String name) {
         // 使用官方推荐的createVariableRangeEvent方法

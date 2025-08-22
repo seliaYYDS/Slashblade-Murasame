@@ -1,8 +1,8 @@
 package cn.adwadg.murasame.events;
 
 import cn.adwadg.murasame.Murasame;
+import cn.adwadg.murasame.Registry.KeyBindings;
 import cn.adwadg.murasame.Registry.SoundRegistry;
-import cn.adwadg.murasame.client.utils.MurasameEvolutionTracker;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +32,7 @@ public class PlayerEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player) {
+
             checkWeaponSwitch(player);
         }
     }
@@ -62,6 +63,7 @@ public class PlayerEventHandler {
         boolean wasHolding = isAwakenedMurasame(lastBlade);
         boolean isHolding = isAwakenedMurasame(currentBlade);
 
+
         if (wasHolding != isHolding) {
             // 计算粒子生成位置（左前方3.5格，左2.3格）
             Vec3 lookVec = player.getLookAngle().normalize();
@@ -71,13 +73,21 @@ public class PlayerEventHandler {
             double y = player.getY() + player.getEyeHeight()+ 0.5 + lookVec.y * 3.5;
             double z = player.getZ() + lookVec.z * 3.5 - rightVec.z * 2.3;
 
-            spawnSpawnEffect(player.serverLevel(), x, y, z);
+            if(!KeyBindings.isToggled){
+                spawnSpawnEffect(player.serverLevel(), x, y, z);
+            }
 
             final SoundEvent[] SWITCH_SOUNDS = {
                     SoundRegistry.MURASAME_SWITCH.get(),
                     SoundRegistry.MURASAME_SWITCH2.get(),
                     SoundRegistry.MURASAME_SWITCH3.get(),
-                    SoundRegistry.MURASAME_SWITCH4.get()
+                    SoundRegistry.MURASAME_SWITCH4.get(),
+                    SoundRegistry.MURASAME_SWITCH5.get(),
+                    SoundRegistry.MURASAME_SWITCH6.get(),
+                    SoundRegistry.MURASAME_SWITCH7.get(),
+                    SoundRegistry.MURASAME_SWITCH8.get(),
+                    SoundRegistry.MURASAME_SWITCH9.get()
+
             };
 
             SoundEvent sound = SWITCH_SOUNDS[random.nextInt(SWITCH_SOUNDS.length)];
@@ -85,9 +95,10 @@ public class PlayerEventHandler {
             if(isHolding){
                 Murasame.playSound(player, sound);
             }
-            Murasame.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP);
+            if(!KeyBindings.isToggled){
+                Murasame.playSound(player, SoundEvents.EXPERIENCE_ORB_PICKUP);
+            }
         }
-
         lastHeldBlades.put(playerId, currentBlade);
     }
 

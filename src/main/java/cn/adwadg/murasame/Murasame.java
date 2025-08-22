@@ -2,6 +2,7 @@ package cn.adwadg.murasame;
 
 
 import cn.adwadg.murasame.Registry.*;
+import cn.adwadg.murasame.Specialeffects.MurasameBlessing;
 import cn.adwadg.murasame.client.model.ModModelProvider;
 import cn.adwadg.murasame.client.renderer.EmbeddedBladeStoneRenderer;
 import cn.adwadg.murasame.client.renderer.MurasameSoulRenderer;
@@ -25,15 +26,18 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
@@ -92,8 +96,12 @@ public class Murasame {
         // 注册创造模式标签栏
         CREATIVE_MODE_TABS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
+
+        SERegistry.REGISTRY_KEY2.register(modEventBus);
+        ComboStateRegistry.COMBO_STATES.register(modEventBus);
+        SlashArtsRegistry.SLASH_ARTS.register(modEventBus);
+
         SoundRegistry.register(modEventBus);
-        //SERegistry.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);  // 先注册方块
         ModEntities.ENTITIES.register(modEventBus);
         ModBlocks.ITEMS.register(modEventBus);   // 然后注册方块物品
@@ -104,12 +112,8 @@ public class Murasame {
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::onGatherData);
         modEventBus.addListener(this::onCommonSetup);
-    }
 
-    /*private void registerAfterModsLoaded(FMLCommonSetupEvent event) {
-        // 确保所有mod已加载
-        SERegistry.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }*/
+    }
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(SoundRegistry::logRegistration);
@@ -167,5 +171,11 @@ public class Murasame {
     }
 
 
-
+    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class KeyRegistration {
+        @SubscribeEvent
+        public static void registerKeys(RegisterKeyMappingsEvent event) {
+            event.register(KeyBindings.TOGGLE_KEY);
+        }
+    }
 }

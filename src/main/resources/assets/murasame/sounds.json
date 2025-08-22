@@ -160,5 +160,50 @@
       }
     ],
     "subtitle": "subtitles.murasame.switch"
+  },
+  "murasame_switch5": {
+    "sounds": [
+      {
+        "name": "murasame:murasame_switch5",
+        "type": "file"
+      }
+    ],
+    "subtitle": "subtitles.murasame.switch"
+  },
+  "murasame_switch6": {
+    "sounds": [
+      {
+        "name": "murasame:murasame_switch6",
+        "type": "file"
+      }
+    ],
+    "subtitle": "subtitles.murasame.switch"
+  },
+  "murasame_switch7": {
+    "sounds": [
+      {
+        "name": "murasame:murasame_switch7",
+        "type": "file"
+      }
+    ],
+    "subtitle": "subtitles.murasame.switch"
+  },
+  "murasame_switch8": {
+    "sounds": [
+      {
+        "name": "murasame:murasame_switch8",
+        "type": "file"
+      }
+    ],
+    "subtitle": "subtitles.murasame.switch"
+  },
+  "murasame_switch9": {
+    "sounds": [
+      {
+        "name": "murasame:murasame_switch9",
+        "type": "file"
+      }
+    ],
+    "subtitle": "subtitles.murasame.switch"
   }
 }

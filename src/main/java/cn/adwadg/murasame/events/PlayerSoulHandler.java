@@ -1,6 +1,7 @@
 package cn.adwadg.murasame.events;
 
 import cn.adwadg.murasame.Murasame;
+import cn.adwadg.murasame.Registry.KeyBindings;
 import cn.adwadg.murasame.Registry.ModEntities;
 import cn.adwadg.murasame.Entities.EntityMurasameSoul;
 import cn.adwadg.murasame.client.utils.MurasameEvolutionTracker;
@@ -30,29 +31,6 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = Murasame.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerSoulHandler {
     private static final Map<UUID, EntityMurasameSoul> soulMap = new HashMap<>();
-
-    /*@SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            checkAndSpawnSoul(player);
-        }
-    }*/
-
-    /*@SubscribeEvent
-    public static void onPlayerAttack(LivingAttackEvent event) {
-        Entity attacker = event.getSource().getDirectEntity();
-        if (attacker instanceof Player player) {
-            EntityMurasameSoul soul = soulMap.get(player);
-            if (soul != null) {
-                // 修改为仅隐藏0.5秒（10 ticks）
-                soul.hideTemporarily(100);
-
-                // 强制同步状态
-                soul.setVisible(false);
-            }
-        }
-    }*/
-
 
     private static void spawnSoulEntity(Player player) {
         try {
@@ -111,46 +89,36 @@ public class PlayerSoulHandler {
         Player player = event.getEntity();
         removeSoul(player);
     }
-    /*@SubscribeEvent
-    public static void onPlayerChangeItem(PlayerInteractEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            //Murasame.LOGGER.debug("玩家交互事件触发，类型: {}", event.getClass().getSimpleName());
-            checkAndSpawnSoul(player);
-        }
-    }*/
-
-
 
 
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START &&
-                event.player instanceof ServerPlayer player) {
+        if(!KeyBindings.isToggled){
+            if (event.phase == TickEvent.Phase.START &&
+                    event.player instanceof ServerPlayer player) {
+                // 每3 tick检测一次（更快响应）
+                if (player.tickCount % 3 == 0) {
+                    ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                    boolean shouldHave = false;
+                    if(stack.getItem() instanceof ItemSlashBlade && stack.getCapability(ItemSlashBlade.BLADESTATE)
+                            .map(state -> "item.murasame.murasamemaru_awakened".equals(state.getTranslationKey()))
+                            .orElse(false)){
+                        shouldHave = true;
+                    }
+                    EntityMurasameSoul soul = soulMap.get(player.getUUID());
 
-            // 每3 tick检测一次（更快响应）
-            if (player.tickCount % 3 == 0) {
-                ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                boolean shouldHave = false;
-                if(stack.getItem() instanceof ItemSlashBlade && stack.getCapability(ItemSlashBlade.BLADESTATE)
-                        .map(state -> "item.murasame.murasamemaru_awakened".equals(state.getTranslationKey()))
-                        .orElse(false)){
-                    shouldHave = true;
-                }
-
-                EntityMurasameSoul soul = soulMap.get(player.getUUID());
-
-                if (shouldHave) {
-                    if (soul == null || !soul.isAlive()) {
-                        spawnSoulEntity(player);
-                    } /*else {
-                        // 强制位置同步
-                        soul.setPos(player.getX(), player.getY() + 1.2, player.getZ());
-                    }*/
-                } else if (soul != null) {
-                    removeSoul(player);
+                    if (shouldHave) {
+                        if (soul == null || !soul.isAlive()) {
+                            spawnSoulEntity(player);
+                        }
+                    } else if (soul != null) {
+                        removeSoul(player);
+                    }
                 }
             }
+        }else {
+            removeSoul(event.player);
         }
     }
 }

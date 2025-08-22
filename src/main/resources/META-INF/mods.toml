@@ -20,7 +20,7 @@ license="${mod_license}"
 # The modid of the mod
 modId="murasame" #mandatory
 # The version number of the mod
-version="1.0.2" #mandatory
+version="1.0.5" #mandatory
 # A display name for the mod
 displayName="Murasame" #mandatory
 logoFile="assets/murasame/textures/logo.png"
@@ -71,6 +71,6 @@ description='''${mod_description}'''
 [[dependencies.murasame]]
     modId = "slashblade"
     mandatory = true
-    versionRange = "[0.6.0,1.4.46]"
+    versionRange = "[0.6.0,)"
     ordering = "AFTER"
     side = "BOTH"

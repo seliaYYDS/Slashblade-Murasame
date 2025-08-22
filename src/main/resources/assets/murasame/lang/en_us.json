@@ -14,5 +14,13 @@
 
   "entity.murasame.soul": "Murasame",
 
-  "itemGroup.murasame_tab": "Murasame"
+  "itemGroup.murasame_tab": "Murasame",
+
+  "se.murasame.murasame_blessing": "Murasame's Blessing",
+
+  "slash_art.murasame.spatial_slash": "§a§k11§dSpatial Slash§a§k11",
+
+  "key.murasame.toggle_soul": "Toggle Blade Soul Entity",
+
+  "category.murasame": "Murasame"
 }

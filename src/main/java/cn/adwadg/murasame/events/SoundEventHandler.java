@@ -4,15 +4,13 @@ import cn.adwadg.murasame.Murasame;
 import cn.adwadg.murasame.Registry.SoundRegistry;
 import cn.adwadg.murasame.client.utils.MurasameEvolutionTracker;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -36,8 +34,6 @@ public class SoundEventHandler {
     private static final Map<UUID, Integer> frightenedCooldown = new HashMap<>();
     private static final Map<UUID, Vec3> lastPlayerPositions = new HashMap<>();
     private static final Map<UUID, Integer> afkCooldowns = new HashMap<>();
-    private static final Map<UUID, Integer> switchCooldowns = new HashMap<>();
-    private static final Map<UUID, ItemStack> lastHeldItems = new HashMap<>();
 
     // 检查玩家是否持有觉醒丛雨丸
     private static boolean isHoldingAwakenedMurasame(Player player) {
@@ -100,9 +96,10 @@ public class SoundEventHandler {
         Player player = event.player;
         UUID playerId = player.getUUID();
 
+
         if (isHoldingAwakenedMurasame(player)) {
             // 低血量检测
-            if (player.getHealth() < player.getMaxHealth() * 0.5f) {
+            if (player.getHealth() < player.getMaxHealth() * 0.4f) {
                 int cooldown = lowHpCooldown.getOrDefault(playerId, 0);
                 if (cooldown <= 0) {
                     Murasame.playSound(player, SoundRegistry.MURASAME_LOWHP.get());
@@ -144,7 +141,7 @@ public class SoundEventHandler {
         Vec3 currentPos = player.position();
         Vec3 lastPos = lastPlayerPositions.get(playerId);
         // 更新位置记录
-        if (lastPos == null || !currentPos.equals(lastPos)) {
+        if (!currentPos.equals(lastPos)) {
             lastPlayerPositions.put(playerId, currentPos);
             player.getPersistentData().putInt("MurasameAfkTicks", 0);
             return;
