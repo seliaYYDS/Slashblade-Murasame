@@ -1,0 +1,6 @@
+item.flammpfeil.slashblade.named.murasamemaru.name= §dMeitou§2「Murasamemaru」
+item.flammpfeil.slashblade.named.murasamemaru_awakened.name= §6Shinto§a「Murasamemaru」
+message.murasame.cannot_get_blade= §cYou don't have enough power
+message.murasame.evolved=Murasamemaru has awakened！
+itemGroup.murasame_tab= Murasame
+tile.embedded_stone.name= Embedded Stone
