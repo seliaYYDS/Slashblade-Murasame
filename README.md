@@ -1,2 +1,3 @@
 # Slashblade-Murasame
-a slashblade:resharped addon
+a slashbladeaddon
+1.12.2 version
